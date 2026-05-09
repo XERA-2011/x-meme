@@ -6,7 +6,9 @@
 # generated output
 /out/
 /dist/
+/renders/
 /.thumbnails/
+/.waveform-cache/
 *.mp4
 *.webm
 
