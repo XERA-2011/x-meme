@@ -1,137 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-composition-variables='[
+  {"id": "template", "type": "string", "label": "当前激活模板", "default": "lyric_mv"}
+]'>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
-    <script src="./assets/data.js"></script>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body {
         width: 1080px;
         height: 1920px;
         overflow: hidden;
-        background: #050300; /* Deep midnight space */
-        font-family: 'Outfit', sans-serif;
-      }
-      
-      /* Premium Midnight Gold Background */
-      .bg-container {
-        position: absolute;
-        top: 0; left: 0;
-        width: 1080px; height: 1920px;
-        background: radial-gradient(circle at 50% 50%, #1a1005 0%, #050300 100%);
-        z-index: 0;
-      }
-      
-      /* Fluid Blobs */
-      .blob {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(80px);
-        opacity: 0.6;
-        mix-blend-mode: screen;
-      }
-      #blob1 {
-        top: 20%; left: 20%;
-        width: 600px; height: 600px;
-        background: radial-gradient(circle, #ff9b00 0%, transparent 70%);
-      }
-      #blob2 {
-        bottom: 20%; right: 10%;
-        width: 700px; height: 700px;
-        background: radial-gradient(circle, #ff5e00 0%, transparent 70%);
-      }
-      #blob3 {
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        width: 800px; height: 800px;
-        background: radial-gradient(circle, #ffdf73 0%, transparent 70%);
-        opacity: 0.3;
-      }
-
-      /* Lyric Container */
-      #lyrics-container {
-        position: absolute;
-        top: 0; left: 0;
-        width: 1080px; height: 1920px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-        padding: 80px;
-        perspective: 1000px; /* For 3D text effects */
-      }
-
-      .lyric-line {
-        position: absolute;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        width: 900px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px; /* Space between words */
-        visibility: hidden; /* Hide until GSAP takes over */
-      }
-      
-      .word {
-        font-size: 85px;
-        font-weight: 900;
-        text-transform: uppercase;
-        line-height: 1.1;
-        letter-spacing: 2px;
-        /* Gold Gradient Text */
-        background: linear-gradient(135deg, #fff2cc 0%, #ffdf73 40%, #ff9b00 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        /* Subtle glow behind text */
-        filter: drop-shadow(0px 0px 15px rgba(255, 155, 0, 0.4));
-        display: inline-block;
-        opacity: 0; /* Hidden for GSAP stagger */
-      }
-
-      /* Progress bar */
-      .progress-bar-container {
-        position: absolute;
-        bottom: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 800px;
-        height: 8px;
-        background: rgba(255,255,255,0.05);
-        border-radius: 4px;
-        z-index: 20;
-        overflow: hidden;
-      }
-      .progress-bar {
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, #ff5e00, #ffdf73);
-        border-radius: 4px;
-        box-shadow: 0 0 15px rgba(255, 223, 115, 0.8);
+        background: #000000;
       }
     </style>
-  
-<script>
-window.__tailwindReady=new Promise(function(resolve){
-var loaded=document.readyState==="complete";
-var resolved=false;
-var observer;
-function readTailwindCss(){var styles=document.querySelectorAll("style");for(var i=styles.length-1;i>=0;i--){var text=styles[i].textContent||"";if(text.indexOf("tailwindcss v")!==-1)return text;}return "";}
-function finish(){if(resolved||!loaded||!readTailwindCss())return;resolved=true;if(observer)observer.disconnect();resolve(true);}
-observer=new MutationObserver(finish);
-observer.observe(document.documentElement,{childList:true,subtree:true,characterData:true});
-if(loaded){finish();}else{window.addEventListener("load",function(){loaded=true;finish();},{once:true});}
-});
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.2.4/dist/index.global.js" integrity="sha384-v5YF9xS+gLRWdvrQ0u/WRbCkjSIH0NjHIPe8tBL1ZRrmI7PiSH6LLdzs0aAIMCuh" crossorigin="anonymous"></script>
-</head>
+  </head>
   <body>
-    <!-- Root Timeline -->
+    <!-- Root Container -->
     <div
       id="root"
       data-composition-id="main"
@@ -140,33 +26,38 @@ if(loaded){finish();}else{window.addEventListener("load",function(){loaded=true;
       data-width="1080"
       data-height="1920"
     >
-      <!-- Background Track -->
-      <div id="bg-track" class="clip" data-start="0" data-duration="150" data-track-index="0">
-        <div class="bg-container">
-          <div class="blob" id="blob1"></div>
-          <div class="blob" id="blob2"></div>
-          <div class="blob" id="blob3"></div>
-        </div>
-        <div class="progress-bar-container">
-          <div class="progress-bar" id="progress"></div>
-        </div>
-      </div>
-      
-      <!-- Audio Track -->
-      <audio 
-        id="main-audio"
-        src="assets/Midnight_Gold.mp3" 
+      <!-- Template Mount 1: Lyric MV -->
+      <div 
+        id="mount-lyric" 
+        data-composition-id="mount-lyric"
         class="clip" 
+        data-composition-src="compositions/lyric_mv/index.html" 
+        data-start="0" 
+        data-duration="150" 
+        data-track-index="0"
+      ></div>
+      
+      <!-- Template Mount 2: News Intro -->
+      <div 
+        id="mount-news" 
+        data-composition-id="mount-news"
+        class="clip" 
+        data-composition-src="compositions/news_intro/index.html" 
         data-start="0" 
         data-duration="150" 
         data-track-index="1"
-      ></audio>
-
-      <!-- Lyrics Track (Dynamically injected) -->
-      <div id="lyrics-container" class="clip" data-start="0" data-duration="150" data-track-index="2">
-        <!-- JS will inject lyrics here -->
-      </div>
+      ></div>
       
+      <!-- Template Mount 3: Science Popularization -->
+      <div 
+        id="mount-science" 
+        data-composition-id="mount-science"
+        class="clip" 
+        data-composition-src="compositions/science_pop/index.html" 
+        data-start="0" 
+        data-duration="150" 
+        data-track-index="2"
+      ></div>
     </div>
 
     <script>
@@ -174,72 +65,28 @@ if(loaded){finish();}else{window.addEventListener("load",function(){loaded=true;
       const tl = gsap.timeline({ paused: true });
       window.__timelines["main"] = tl;
 
-      // Ambient background blob movements
-      tl.to("#blob1", { x: 200, y: 150, scale: 1.2, duration: 10, yoyo: true, repeat: 15, ease: "sine.inOut" }, 0);
-      tl.to("#blob2", { x: -200, y: -100, scale: 1.1, duration: 8, yoyo: true, repeat: 18, ease: "sine.inOut" }, 0);
-      tl.to("#blob3", { scale: 1.3, opacity: 0.5, duration: 5, yoyo: true, repeat: 30, ease: "sine.inOut" }, 0);
-      
-      // Progress bar animation
-      tl.to("#progress", { width: "100%", duration: 150, ease: "none" }, 0);
+      // Dynamically resolve template router variable
+      const vars = window.__hyperframes ? window.__hyperframes.getVariables() : {};
+      const activeTemplate = vars.template || "lyric_mv";
 
-      // Render Lyrics
-      const container = document.getElementById("lyrics-container");
-      const data = window.LYRICS_DATA || [];
-      
-      data.forEach((lyric, index) => {
-        // Create DOM element for the line
-        const lineEl = document.createElement("div");
-        lineEl.className = "lyric-line";
-        lineEl.id = "lyric-" + index;
-        
-        // Split text into words for staggered animation
-        const words = lyric.text.split(" ");
-        const isMusic = lyric.text.trim().toLowerCase() === "music";
-        
-        words.forEach((wordText, wIndex) => {
-           if (!wordText) return;
-           const wordEl = document.createElement("div");
-           wordEl.className = "word";
-           wordEl.innerText = wordText;
-           
-           // Style differently if it's just a "[Music]" tag
-           if (isMusic) {
-             wordEl.style.fontSize = "50px";
-             wordEl.style.background = "none";
-             wordEl.style.webkitTextFillColor = "rgba(255, 255, 255, 0.4)";
-             wordEl.style.filter = "none";
-           }
-           
-           lineEl.appendChild(wordEl);
-        });
-        
-        container.appendChild(lineEl);
-        
-        // Ensure visibility during active period
-        tl.set(lineEl, { visibility: "visible" }, lyric.start);
-        
-        const wordElements = lineEl.querySelectorAll('.word');
-        
-        // Setup GSAP Stagger Animation
-        if (wordElements.length > 0) {
-          // Entry animation (3D staggered fly-in)
-          tl.fromTo(wordElements, 
-            { opacity: 0, y: 80, rotationX: -90, z: -200 }, 
-            { opacity: 1, y: 0, rotationX: 0, z: 0, duration: 0.5, stagger: 0.08, ease: "back.out(1.5)" }, 
-            lyric.start
-          );
-          
-          // Exit animation (Smooth fade and scale out with blur)
-          // Since GSAP can't animate CSS filter blur directly across all browsers smoothly without overhead,
-          // we use scale, opacity, and y for a cinematic exit.
-          tl.to(lineEl, 
-            { opacity: 0, scale: 1.15, y: -40, duration: 0.5, ease: "power2.in" }, 
-            lyric.end - 0.5
-          );
+      // Map template IDs to mount elements
+      const mounts = {
+        "lyric_mv": document.getElementById("mount-lyric"),
+        "news_intro": document.getElementById("mount-news"),
+        "science_pop": document.getElementById("mount-science")
+      };
+
+      // Perform clean routing: preserve only the target mount to ensure absolute audio/visual isolation
+      Object.keys(mounts).forEach(key => {
+        const el = mounts[key];
+        if (el) {
+          if (key === activeTemplate) {
+            tl.set(el, { visibility: "visible" }, 0);
+          } else {
+            // Remove completely from the tree to avoid phantom track embedding or pre-rendering overhead
+            el.remove();
+          }
         }
-        
-        // Hard kill at the end of the clip to satisfy linter and prevent ghosting
-        tl.set(lineEl, { opacity: 0, visibility: "hidden" }, lyric.end);
       });
     </script>
   </body>

@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[
+  {"id":"topicTitle","type":"string","label":"科普主题","default":"THE PHYSICS OF TIME TRAVEL"},
+  {"id":"presenterName","type":"string","label":"主讲人","default":"Dr. Alex Mercer"},
+  {"id":"accentColor","type":"color","label":"强调色","default":"#10b981"}
+]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #022c22; /* Very deep rich emerald/green dark mode */
+        font-family: 'Outfit', sans-serif;
+      }
+
+      /* Premium Science Grid Background */
+      .bg-container {
+        position: absolute;
+        top: 0; left: 0;
+        width: 1080px; height: 1920px;
+        background: radial-gradient(circle at 50% 30%, #064e3b 0%, #022c22 100%);
+        z-index: 0;
+      }
+
+      /* Subtle Grid Overlay */
+      .grid-overlay {
+        position: absolute;
+        top: 0; left: 0;
+        width: 1080px; height: 1920px;
+        background-size: 60px 60px;
+        background-image: 
+          linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+        z-index: 1;
+      }
+
+      /* Ambient floating glow */
+      .ambient-glow {
+        position: absolute;
+        width: 600px; height: 600px;
+        border-radius: 50%;
+        background: #34d399;
+        filter: blur(120px);
+        opacity: 0.25;
+        mix-blend-mode: screen;
+        top: 30%; left: 25%;
+      }
+
+      /* Header Bar */
+      .header-bar {
+        position: absolute;
+        top: 100px; left: 80px;
+        width: 920px;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid rgba(52, 211, 153, 0.2);
+        padding-bottom: 30px;
+      }
+      .badge-science {
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid #34d399;
+        color: #6ee7b7;
+        padding: 12px 28px;
+        border-radius: 50px;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+      }
+      .presenter-info {
+        text-align: right;
+      }
+      .lbl-by {
+        font-size: 20px;
+        color: #a7f3d0;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+      }
+      .lbl-name {
+        font-size: 32px;
+        font-weight: 900;
+        color: #ffffff;
+      }
+
+      /* Topic Title Banner */
+      .title-container {
+        position: absolute;
+        top: 250px; left: 80px;
+        width: 920px;
+        z-index: 10;
+      }
+      .main-topic {
+        font-size: 80px;
+        font-weight: 900;
+        color: #ffffff;
+        line-height: 1.1;
+        letter-spacing: -1px;
+        text-transform: uppercase;
+        text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      }
+
+      /* Knowledge Steps Timeline / Cards */
+      .steps-container {
+        position: absolute;
+        top: 520px; left: 80px;
+        width: 920px;
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+        z-index: 15;
+      }
+      
+      .step-card {
+        width: 100%;
+        background: rgba(6, 78, 59, 0.4);
+        border-left: 8px solid #10b981;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 0 32px 32px 0;
+        padding: 45px 50px;
+        display: flex;
+        align-items: flex-start;
+        gap: 40px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        opacity: 0; /* Hidden for GSAP sequential entry */
+        transform: translateX(-80px);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      /* Subtle light sweep effect inside card */
+      .card-glow-bar {
+        position: absolute;
+        top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.1), transparent);
+      }
+
+      .step-num {
+        font-size: 64px;
+        font-weight: 900;
+        color: #34d399;
+        line-height: 0.9;
+        min-width: 100px;
+      }
+      .step-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .step-title {
+        font-size: 42px;
+        font-weight: 800;
+        color: #ffffff;
+      }
+      .step-desc {
+        font-size: 26px;
+        color: #d1fae5;
+        line-height: 1.4;
+        font-weight: 400;
+      }
+
+      /* Footer Info */
+      .footer-indicator {
+        position: absolute;
+        bottom: 80px; left: 80px;
+        width: 920px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 20;
+      }
+      .progress-dots {
+        display: flex;
+        gap: 15px;
+      }
+      .dot {
+        width: 16px; height: 16px;
+        border-radius: 50%;
+        background: rgba(52, 211, 153, 0.2);
+      }
+      .dot.active {
+        background: #34d399;
+        box-shadow: 0 0 15px #34d399;
+      }
+      .lbl-series {
+        font-size: 22px;
+        font-weight: 700;
+        color: #6ee7b7;
+        letter-spacing: 4px;
+      }
+    </style>
+  
+<script>
+window.__tailwindReady=new Promise(function(resolve){
+var loaded=document.readyState==="complete";
+var resolved=false;
+var observer;
+function readTailwindCss(){var styles=document.querySelectorAll("style");for(var i=styles.length-1;i>=0;i--){var text=styles[i].textContent||"";if(text.indexOf("tailwindcss v")!==-1)return text;}return "";}
+function finish(){if(resolved||!loaded||!readTailwindCss())return;resolved=true;if(observer)observer.disconnect();resolve(true);}
+observer=new MutationObserver(finish);
+observer.observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+if(loaded){finish();}else{window.addEventListener("load",function(){loaded=true;finish();},{once:true});}
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.2.4/dist/index.global.js" integrity="sha384-v5YF9xS+gLRWdvrQ0u/WRbCkjSIH0NjHIPe8tBL1ZRrmI7PiSH6LLdzs0aAIMCuh" crossorigin="anonymous"></script>
+</head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="science_pop"
+      data-start="0"
+      data-duration="150"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Background Track -->
+      <div id="bg-track" class="clip" data-start="0" data-duration="150" data-track-index="0">
+        <div class="bg-container"></div>
+        <div class="grid-overlay"></div>
+        <div class="ambient-glow" id="ambient-orb"></div>
+      </div>
+
+      <!-- Header & Title Track -->
+      <div id="header-track" class="clip" data-start="0" data-duration="150" data-track-index="1">
+        <div class="header-bar">
+          <div class="badge-science">SCIENCE POP</div>
+          <div class="presenter-info">
+            <div class="lbl-by">PRESENTER</div>
+            <div class="lbl-name" id="lbl-presenter">Dr. Alex Mercer</div>
+          </div>
+        </div>
+        <div class="title-container">
+          <div class="main-topic" id="lbl-topic">THE PHYSICS OF TIME TRAVEL</div>
+        </div>
+      </div>
+
+      <!-- Steps Content Track -->
+      <div id="steps-track" class="clip" data-start="0" data-duration="150" data-track-index="2">
+        <div class="steps-container">
+          <!-- Step 1 -->
+          <div class="step-card" id="step-1">
+            <div class="card-glow-bar" id="glow-1"></div>
+            <div class="step-num">01</div>
+            <div class="step-content">
+              <div class="step-title">Einstein-Rosen Bridges</div>
+              <div class="step-desc">Theoretical wormholes folding spacetime to link disparate cosmic coordinates instantly.</div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card" id="step-2">
+            <div class="card-glow-bar" id="glow-2"></div>
+            <div class="step-num">02</div>
+            <div class="step-content">
+              <div class="step-title">Closed Timelike Curves</div>
+              <div class="step-desc">Worldlines in a Lorentzian manifold returning to their precise starting points in spacetime.</div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card" id="step-3">
+            <div class="card-glow-bar" id="glow-3"></div>
+            <div class="step-num">03</div>
+            <div class="step-content">
+              <div class="step-title">Novikov Self-Consistency</div>
+              <div class="step-desc">Paradoxes are physically prevented; any localized causal interference loops back predictably.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Track -->
+      <div id="footer-track" class="clip" data-start="0" data-duration="150" data-track-index="3">
+        <div class="footer-indicator">
+          <div class="lbl-series">KNOWLEDGE DISCOVERY SERIES</div>
+          <div class="progress-dots">
+            <div class="dot active" id="dot-1"></div>
+            <div class="dot" id="dot-2"></div>
+            <div class="dot" id="dot-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["science_pop"] = tl;
+
+      // Map variables dynamically
+      const vars = window.__hyperframes ? window.__hyperframes.getVariables() : {};
+      if (vars.topicTitle) document.getElementById("lbl-topic").innerText = vars.topicTitle;
+      if (vars.presenterName) document.getElementById("lbl-presenter").innerText = vars.presenterName;
+      if (vars.accentColor) {
+        document.querySelectorAll(".step-card").forEach(el => el.style.borderLeftColor = vars.accentColor);
+        document.querySelectorAll(".step-num").forEach(el => el.style.color = vars.accentColor);
+        document.querySelector(".badge-science").style.borderColor = vars.accentColor;
+      }
+
+      // Ambient orbit breathing
+      tl.to("#ambient-orb", { scale: 1.3, opacity: 0.4, duration: 8, yoyo: true, repeat: 20, ease: "sine.inOut" }, 0);
+
+      // Header and title cinematic fade-in
+      tl.fromTo(".header-bar", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, 0.2);
+      tl.fromTo(".title-container", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 1.2, ease: "power4.out" }, 0.4);
+
+      // Sequential knowledge popups triggered across the timeline
+      // Step 1 enters
+      tl.fromTo("#step-1", 
+        { opacity: 0, x: -80 }, 
+        { opacity: 1, x: 0, duration: 0.8, ease: "back.out(1.2)" }, 
+        1.0
+      );
+      tl.to("#glow-1", { left: "100%", duration: 1.5, ease: "power2.inOut" }, 1.2);
+
+      // Step 2 enters
+      tl.fromTo("#step-2", 
+        { opacity: 0, x: -80 }, 
+        { opacity: 1, x: 0, duration: 0.8, ease: "back.out(1.2)" }, 
+        3.5
+      );
+      tl.to("#dot-2", { backgroundColor: "#34d399", boxShadow: "0 0 15px #34d399", duration: 0.4 }, 3.5);
+      tl.to("#glow-2", { left: "100%", duration: 1.5, ease: "power2.inOut" }, 3.7);
+
+      // Step 3 enters
+      tl.fromTo("#step-3", 
+        { opacity: 0, x: -80 }, 
+        { opacity: 1, x: 0, duration: 0.8, ease: "back.out(1.2)" }, 
+        6.0
+      );
+      tl.to("#dot-3", { backgroundColor: "#34d399", boxShadow: "0 0 15px #34d399", duration: 0.4 }, 6.0);
+      tl.to("#glow-3", { left: "100%", duration: 1.5, ease: "power2.inOut" }, 6.2);
+    </script>
+  </body>
+</html>
